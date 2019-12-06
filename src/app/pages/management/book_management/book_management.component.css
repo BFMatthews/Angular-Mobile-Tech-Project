@@ -1,0 +1,26 @@
+.fake-link {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+th {
+  font-style:italic;
+}
+
+label {
+  font-weight:bold;
+}
+
+input[type=date]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    display: none;
+}
+
+input[type=submit] {
+  background-color:rgb(236, 194, 76);
+}
+
+input[type=submit]:hover {
+  background-color:rgb(236, 155, 33);
+}

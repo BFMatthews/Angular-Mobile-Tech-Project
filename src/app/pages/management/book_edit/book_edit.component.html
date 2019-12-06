@@ -1,0 +1,58 @@
+<div style="text-align:center">
+<h1 style="margin-bottom:30px">Amend Book Details</h1>
+</div>
+
+<div class="row">
+  <div class="col-lg-6 col-md-6 col-sm-6" style="text-align:center">
+    <p style="text-decoration: underline;">Picture:</p>
+    <img src={{bookObjEdit.image}} style="width:45%">
+  </div>
+  <div class="col-lg-6 col-md-6 col-sm-6" style="text-align:center">
+    <p style="text-decoration: underline;">Options:</p>
+    <form (submit)="onSubmit()">
+			<br>
+			<div class="form-group" style="text-align:left">
+				<label for="search-title">Title</label>
+				<input type="text" class="form-control" id="search-title" name="amend-title" placeholder="Title" [(ngModel)]="bookObjEdit.title">
+      </div>
+      <div class="form-group" style="text-align:left">
+				<label for="search-title">Author</label>
+				<input type="text" class="form-control" id="search-author" name="amend-author" placeholder="Title" [(ngModel)]="bookObjEdit.author">
+      </div>
+      <div class="form-group" style="text-align:left">
+				<label for="search-title">ISBN</label>
+				<input type="text" class="form-control" id="search-isbn" name="amend-isbn" placeholder="Title" [(ngModel)]="bookObjEdit.isbn" disabled>
+      </div>
+      <div class="form-group" style="text-align:left">
+				<label for="search-title">Publication Year</label>
+				<input type="text" class="form-control" id="search-year" name="amend-year" placeholder="Title" [(ngModel)]="bookObjEdit.year">
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="search-availability" style="font-weight:normal">Select Availability...</label>
+        </div>
+        <select class="custom-select" id="search-availability" name="search-availability" [(ngModel)]="bookObjEdit.status" [disabled]="bookObjEdit.status == 'on-loan'">
+          <option value="available">Available</option>
+          <option value="not-available">Not Available</option>
+          <option value="on-loan" disabled>On Loan</option>
+        </select>
+      </div>
+      <div class="form-group" style="text-align:left" *ngIf="bookObjEdit.status == 'on-loan'">
+				<label for="search-title">This book is currently on loan. You are unable to amend the status at this time!</label>
+      </div>
+      <div class="form-group" style="text-align:left">
+				<label for="search-title">Image URL</label>
+				<input type="text" class="form-control" id="search-image" name="amend-image" placeholder="Title" [(ngModel)]="bookObjEdit.image">
+      </div>
+      <div class="form-group" style="text-align:left">
+        <input type="submit" class="form-control" id="formGroupExampleInput2" value="Update">
+       </div>
+    </form>
+  </div>
+</div>
+
+<!-- <div class="row">
+  <div class="col-12" style="text-align:center">
+    <p>Save:</p>
+  </div>
+</div> -->

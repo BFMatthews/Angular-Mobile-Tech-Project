@@ -1,0 +1,52 @@
+<div (window:resize)="onResize($event)">
+<div style="text-align:center">
+  <h1>Reset Password</h1>
+  <form style="display:inline-block" [ngStyle]="{ 'width': (widthOfWindow > 700 ? '40%' : '80%') }" (submit)="onSubmit()">
+    <br>&nbsp;
+    <div class="form-group" style="text-align:left">
+      <label for="login-email">Email Address</label>
+      <input type="text" class="form-control" id="reset-email" placeholder="Email Address" name="reset-email" ngClass="{{emailClass}}" [(ngModel)]="resetObject.email" (ngModelChange)="emailChange()" [disabled]="displayQuestion">
+    </div>
+    
+    <div class="form-group" style="text-align:left" *ngIf="!displayQuestion">
+      <input type="submit" class="form-control" id="formGroupExampleInput2" value="Submit">
+    </div>
+    
+    <div *ngIf="displayQuestion" style="border:1px solid black;margin-bottom:1rem"></div>
+
+  </form>
+</div>
+<div *ngIf="displayQuestion" style="text-align:center">
+  <form style="display:inline-block;" [ngStyle]="{ 'width': (widthOfWindow > 700 ? '40%' : '80%') }" (submit)="onSubmitQuestion()" >
+    <div class="form-group" style="text-align:left">
+      <label for="login-email">Security Question</label>
+      <p>{{resetObject.question}}</p>
+      <input type="text" class="form-control" id="reset-answer" placeholder="Security Answer" name="reset-answer" [(ngModel)]="resetObject.answer" [disabled]="displayNewPasswordFields" ngClass="{{answerClass}}">
+    </div>
+
+    <div class="form-group" style="text-align:left" *ngIf="!displayNewPasswordFields">
+      <input type="submit" class="form-control" id="formGroupExampleInput2" value="Submit">
+    </div>
+    <div *ngIf="displayNewPasswordFields" style="border:1px solid black;margin-bottom:1rem"></div>
+  </form>
+</div>
+
+<div *ngIf="displayNewPasswordFields" style="text-align:center">
+  <form style="display:inline-block;" [ngStyle]="{ 'width': (widthOfWindow > 700 ? '40%' : '80%') }" (submit)="onSubmitNewPassword()" >
+    <div class="form-group" style="text-align:left">
+      <label for="login-email">Set New Password</label>
+      <div class="form-group input-group mb-3" style="text-align:left">
+        <input type="password" class="form-control" id="reset-password" placeholder="Password" name="reset-password" ngClass="{{passwordClass}}" [(ngModel)]="resetObject.password" (ngModelChange)="passwordChange()">
+        <div class="input-group-prepend" (click)="questionPasswordClicked()" style="cursor:pointer">
+          <span class="input-group-text questionMarker" id="basic-addon1" style="border-radius: 0rem 0.25rem 0.25rem 0rem;border-left:0px">?</span>
+        </div>
+      </div>
+      <input type="password" class="form-control" id="reset-password-confirm" placeholder="Password Confirm" name="reset-password-confirm" ngClass="{{passwordConfirmClass}}" [(ngModel)]="resetObject.passwordConfirm" (ngModelChange)="passwordConfirmChange()">
+    </div>
+
+    <div class="form-group" style="text-align:left">
+      <input type="submit" class="form-control" id="formGroupExampleInput2" value="Change Password">
+    </div>
+  </form>
+</div>
+</div>

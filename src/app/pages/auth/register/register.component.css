@@ -1,0 +1,24 @@
+label {
+  font-weight:bold;
+}
+
+input[type=date]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    display: none;
+}
+
+input[type=submit] {
+  background-color:rgb(236, 194, 76);
+}
+
+input[type=submit]:hover {
+  background-color:rgb(236, 155, 33);
+}
+
+.questionMarker {
+  background-color:#e9ecef;
+}
+
+.questionMarker:hover {
+  background-color:#c5c5c5;
+}

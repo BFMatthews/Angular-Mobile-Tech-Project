@@ -1,0 +1,37 @@
+<div style="text-align:center" (window:resize)="onResize($event)">
+  <h1>Account Settings</h1>
+  <form style="display:inline-block" (submit)="onSubmit()" [ngStyle]="{ 'width': (widthOfWindow > 700 ? '40%' : '80%') }">
+    <br>&nbsp;
+    <h2 style="text-align:left">1. Change Password</h2>
+    <br>&nbsp;
+    <div class="form-group" style="text-align:left">
+      <label for="reset-password">Current Password</label>
+      <input type="password" class="form-control" id="reset-password" placeholder="Password" name="reset-password" ngClass="{{oldPasswordClass}}" [(ngModel)]="resetObject.currentPassword" (ngModelChange)="oldPasswordChange()" [disabled]="displayNewPassword">
+    </div>
+    
+    <div class="form-group" style="text-align:left" *ngIf="!displayNewPassword">
+      <input type="submit" class="form-control" id="formGroupExampleInput2" value="Validate">
+    </div>
+    
+    <div *ngIf="displayNewPassword" style="border:1px solid black;margin-bottom:1rem"></div>
+  </form>
+</div>
+
+<div *ngIf="displayNewPassword" style="text-align:center">
+  <form style="display:inline-block" (submit)="onSubmitNewPassword()" [ngStyle]="{ 'width': (widthOfWindow > 700 ? '40%' : '80%') }">
+    <div class="form-group" style="text-align:left">
+      <label for="reset-new-password">Set New Password</label>
+      <div class="form-group input-group mb-3" style="text-align:left">
+        <input type="password" class="form-control" id="reset-new-password" placeholder="Password" name="reset-new-password" ngClass="{{newPasswordClass}}" [(ngModel)]="resetObject.password" (ngModelChange)="passwordChange()">
+        <div class="input-group-prepend" (click)="questionPasswordClicked()" style="cursor:pointer">
+          <span class="input-group-text questionMarker" id="basic-addon1" style="border-radius: 0rem 0.25rem 0.25rem 0rem;border-left:0px">?</span>
+        </div>
+      </div>
+      <input type="password" class="form-control" id="reset-password-confirm" placeholder="Password Confirm" name="reset-password-confirm" ngClass="{{passwordConfirmClass}}" [(ngModel)]="resetObject.passwordConfirm" (ngModelChange)="passwordConfirmChange()">
+    </div>
+
+    <div class="form-group" style="text-align:left">
+      <input type="submit" class="form-control" id="formGroupExampleInput2" value="Change Password">
+    </div>
+  </form>
+</div>

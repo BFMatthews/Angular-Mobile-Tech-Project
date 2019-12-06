@@ -1,0 +1,210 @@
+<div style="text-align:center" (window:resize)="onResize($event)">
+<h1>My Books</h1>
+<div style="text-align:center;margin:auto" [ngStyle]="{ 'width': (widthOfWindow > 800 ? '80%' : '100%') }">
+
+<table style="width:100%">
+  <tr>
+    <td style="text-align:left"><p (click)="loanedBooksClicked()" style="cursor:pointer">1. My Loaned Books</p></td>
+    <td *ngIf="displayLoanedBooks" style="float:right"><p (click)="loanedBooksClicked()" style="transform: rotate(90deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+    <td *ngIf="!displayLoanedBooks" style="float:right"><p (click)="loanedBooksClicked()" style="transform: rotate(270deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+  </tr>
+</table>
+
+<table *ngIf="userLoans.length > 0 && displayLoanedBooks && widthOfWindow > 800" style="width:100%;margin-bottom:20px">
+  <tr>
+    <th>No.</th>
+    <th>Image</th>
+    <th style="text-align:left">Title</th>
+    <th style="text-align:left">ISBN</th>
+    <th>Book Options</th>
+  </tr>
+  <tr *ngFor="let book of userLoans; let i = index">
+    <td>{{i + 1}}.</td>
+    <td>Image</td>
+    <td style="text-align:left">{{book.title}}</td>
+    <td style="text-align:left">{{book.isbn}}</td>
+    <td>
+      <button type="button" class="btn btn-secondary" style="margin-right:5px" (click)="viewBookDetails(book.isbn)">View Details</button>
+      <button type="button" class="btn btn-success" style="margin-right:5px" (click)="submitReturn(book)">Submit Return</button>
+    </td>
+  </tr>
+</table>
+<table *ngIf="userLoans.length > 0 && displayLoanedBooks && widthOfWindow < 801" style="width:100%;margin-bottom:20px">
+  <tr>
+    <th style="text-align:left;width:10%">No.</th>
+    <th style="text-align:left;width:70%">Title</th>
+    <th style="text-align:left;width:20%"></th>
+  </tr>
+  <tr *ngFor="let book of userLoans; let i = index">
+    <td style="text-align:left">{{i + 1}}.</td>
+    <td style="text-align:left">{{book.title}}</td>
+    <td style="float:right" (click)="change(book, 1)"><i class="fas fa-info-circle" style="font-size:25px"></i></td>
+  </tr>
+  <tr *ngIf="displayExtra" id="bookDetails"><td colspan="3">
+    <div style="border:1px solid black;text-align:left;padding:5px;border-radius:5px">
+      <p><b>Selected Book</b>&nbsp;({{selectedBook.title}}):</p>
+      <p style="margin-bottom:0px">ISBN:&nbsp;{{selectedBook.isbn}}</p>
+      <button type="button" class="btn btn-secondary" style="width:49%" (click)="viewBookDetails(selectedBook.isbn)">View Details</button>
+      <button type="button" class="btn btn-success" style="margin-left:5px;width:49%" (click)="submitReturn(selectedBook)">Submit Return</button>
+    </div>
+  </td></tr>
+</table>
+<div *ngIf="userLoans.length == 0 && displayLoanedBooks">
+  <p style="color:red">You do not have any books currently on loan</p>  
+</div>
+
+<table style="width:100%">
+  <tr>
+    <td style="text-align:left"><p (click)="pendingReturnsClicked()" style="cursor:pointer">2. My Pending Returns</p></td>
+    <td *ngIf="displayPendingReturns" style="float:right"><p (click)="pendingReturnsClicked()" style="transform: rotate(90deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+    <td *ngIf="!displayPendingReturns" style="float:right"><p (click)="pendingReturnsClicked()" style="transform: rotate(270deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+  </tr>
+</table>
+
+<table *ngIf="currentUserReturns.length > 0 && displayPendingReturns && widthOfWindow > 800" style="width:100%;margin-bottom:20px">
+  <tr>
+    <th>No.</th>
+    <th>Image</th>
+    <th style="text-align:left">Title</th>
+    <th style="text-align:left">ISBN</th>
+    <th>Book Options</th>
+  </tr>
+  <tr *ngFor="let book of currentUserReturns; let i = index">
+    <td>{{i + 1}}.</td>
+    <td>Image</td>
+    <td style="text-align:left">{{book.title}}</td>
+    <td style="text-align:left">{{book.isbn}}</td>
+    <td>
+      <button type="button" class="btn btn-secondary" style="margin-right:5px" (click)="viewBookDetails(book.isbn)">View Details</button>
+      <button type="button" class="btn btn-danger" style="margin-right:5px" (click)="cancelReturn(book)">Cancel Return</button>
+    </td>
+  </tr>
+</table>
+<table *ngIf="currentUserReturns.length > 0 && displayPendingReturns && widthOfWindow < 801" style="width:100%;margin-bottom:20px">
+  <tr>
+    <th style="text-align:left;width:10%">No.</th>
+    <th style="text-align:left;width:70%">Title</th>
+    <th style="text-align:left;width:20%"></th>
+  </tr>
+  <tr *ngFor="let book of currentUserReturns; let i = index">
+    <td style="text-align:left">{{i + 1}}.</td>
+    <td style="text-align:left">{{book.title}}</td>
+    <td style="float:right" (click)="change(book, 2)"><i class="fas fa-info-circle" style="font-size:25px"></i></td>
+  </tr>
+  <tr *ngIf="displayExtra2" id="bookDetails2"><td colspan="3">
+    <div style="border:1px solid black;text-align:left;padding:5px;border-radius:5px">
+      <p><b>Selected Book</b>&nbsp;({{selectedBook2.title}}):</p>
+      <p style="margin-bottom:0px">ISBN:&nbsp;{{selectedBook2.isbn}}</p>
+      <button type="button" class="btn btn-secondary" style="width:49%" (click)="viewBookDetails(selectedBook2.isbn)">View Details</button>
+      <button type="button" class="btn btn-danger" style="margin-left:5px;width:49%" (click)="cancelReturn(selectedBook2)">Cancel Return</button>
+    </div>
+  </td></tr>
+</table>
+<div *ngIf="currentUserReturns.length == 0 && displayPendingReturns">
+  <p style="color:red">You do not have books currently pending return</p>  
+</div>
+
+<table style="width:100%">
+  <tr>
+    <td style="text-align:left"><p (click)="pendingLoansClicked()" style="cursor:pointer">3. My Pending Loans</p></td>
+    <td *ngIf="displayPendingLoans" style="float:right"><p (click)="pendingLoansClicked()" style="transform: rotate(90deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+    <td *ngIf="!displayPendingLoans" style="float:right"><p (click)="pendingLoansClicked()" style="transform: rotate(270deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+  </tr>
+</table>
+
+<table *ngIf="userPendingRequests.length > 0 && displayPendingLoans && widthOfWindow > 800" style="width:100%;margin-bottom:20px">
+  <tr>
+    <th>No.</th>
+    <th>Image</th>
+    <th style="text-align:left">Title</th>
+    <th style="text-align:left">ISBN</th>
+    <th>Book Options</th>
+  </tr>
+  <tr *ngFor="let book of userPendingRequests; let i = index">
+    <td>{{i + 1}}.</td>
+    <td>Image</td>
+    <td style="text-align:left">{{book.title}}</td>
+    <td style="text-align:left">{{book.isbn}}</td>
+    <td>
+      <button type="button" class="btn btn-secondary" style="margin-right:5px" (click)="viewBookDetails(book.isbn)">View Details</button>
+      <button type="button" class="btn btn-danger" style="margin-right:5px" (click)="cancelLoan(book)">Cancel Loan</button>
+    </td>
+  </tr>
+</table>
+<table *ngIf="userPendingRequests.length > 0 && displayPendingLoans && widthOfWindow < 801" style="width:100%;margin-bottom:20px">
+  <tr>
+    <th style="text-align:left;width:10%">No.</th>
+    <th style="text-align:left;width:70%">Title</th>
+    <th style="text-align:left;width:20%"></th>
+  </tr>
+  <tr *ngFor="let book of userPendingRequests; let i = index">
+    <td style="text-align:left">{{i + 1}}.</td>
+    <td style="text-align:left">{{book.title}}</td>
+    <td style="float:right" (click)="change(book, 3)"><i class="fas fa-info-circle" style="font-size:25px"></i></td>
+  </tr>
+  <tr *ngIf="displayExtra3" id="bookDetails3"><td colspan="3">
+    <div style="border:1px solid black;text-align:left;padding:5px;border-radius:5px">
+      <p><b>Selected Book</b>&nbsp;({{selectedBook3.title}}):</p>
+      <p style="margin-bottom:0px">ISBN:&nbsp;{{selectedBook3.isbn}}</p>
+      <button type="button" class="btn btn-secondary" style="width:49%" (click)="viewBookDetails(selectedBook3.isbn)">View Details</button>
+      <button type="button" class="btn btn-danger" style="margin-left:5px;width:49%" (click)="cancelLoan(selectedBook3)">Cancel Loan</button>
+    </div>
+  </td></tr>
+</table>
+<div *ngIf="userPendingRequests.length == 0 && displayPendingLoans">
+  <p style="color:red">You do not have books currently pending loan</p>  
+</div>
+
+<table style="width:100%">
+  <tr>
+    <td style="text-align:left"><p (click)="overdueClicked()" style="cursor:pointer">4. My Overdue Loans</p></td>
+    <td *ngIf="displayOverdue" style="float:right"><p (click)="overdueClicked()" style="transform: rotate(90deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+    <td *ngIf="!displayOverdue" style="float:right"><p (click)="overdueClicked()" style="transform: rotate(270deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+  </tr>
+</table>
+
+<table *ngIf="userOverdue.length > 0 && displayOverdue && widthOfWindow > 800" style="width:100%;margin-bottom:20px">
+  <tr>
+    <th>No.</th>
+    <th>Image</th>
+    <th style="text-align:left">Title</th>
+    <th style="text-align:left">ISBN</th>
+    <th>Book Options</th>
+  </tr>
+  <tr *ngFor="let book of userOverdue; let i = index">
+    <td>{{i + 1}}.</td>
+    <td>Image</td>
+    <td style="text-align:left">{{book.title}}</td>
+    <td style="text-align:left">{{book.isbn}}</td>
+    <td>
+      <button type="button" class="btn btn-secondary" style="margin-right:5px" (click)="viewBookDetails(book.isbn)">View Details</button>
+      <button type="button" class="btn btn-success" style="margin-right:5px" (click)="submitReturn(book)">Submit Return</button>
+    </td>
+  </tr>
+</table>
+<table *ngIf="userOverdue.length > 0 && displayOverdue && widthOfWindow < 801" style="width:100%;margin-bottom:20px">
+  <tr>
+    <th style="text-align:left;width:10%">No.</th>
+    <th style="text-align:left;width:70%">Title</th>
+    <th style="text-align:left;width:20%"></th>
+  </tr>
+  <tr *ngFor="let book of userOverdue; let i = index">
+    <td style="text-align:left">{{i + 1}}.</td>
+    <td style="text-align:left">{{book.title}}</td>
+    <td style="float:right" (click)="change(book, 4)"><i class="fas fa-info-circle" style="font-size:25px"></i></td>
+  </tr>
+  <tr *ngIf="displayExtra4" id="bookDetails4"><td colspan="3">
+    <div style="border:1px solid black;text-align:left;padding:5px;border-radius:5px">
+      <p><b>Selected Book</b>&nbsp;({{selectedBook4.title}}):</p>
+      <p style="margin-bottom:0px">ISBN:&nbsp;{{selectedBook4.isbn}}</p>
+      <button type="button" class="btn btn-secondary" style="width:49%" (click)="viewBookDetails(selectedBook4.isbn)">View Details</button>
+      <button type="button" class="btn btn-success" style="margin-left:5px;width:49%" (click)="submitReturn(selectedBook4)">Submit Return</button>
+    </div>
+  </td></tr>
+</table>
+<div *ngIf="userOverdue.length == 0 && displayOverdue">
+  <p style="color:red">You do not have books currently overdue</p>  
+</div>
+
+</div>
+</div>

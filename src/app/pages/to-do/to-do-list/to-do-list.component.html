@@ -1,0 +1,42 @@
+<div style="text-align:center">
+<h1>To-Do List</h1>
+</div>
+<div style="text-align:left">
+<form (submit)="onSubmit()">
+  <div>
+    <label for="to-do-title">Title: </label>
+    <input type="text" id="to-do-title" [(ngModel)]="toDoItem.title" name="to-do-title">
+  </div>
+  <div>
+    <label for="to-do-content">Content: </label>
+    <input type="text" id="to-do-content" [(ngModel)]="toDoItem.content" name="to-do-content">
+  </div>
+  <input type="submit" value="Create">
+</form>
+
+<ul>
+  <li *ngFor="let item of toDoItems">
+    <div>
+      <span>Title: </span>
+      <span>{{ item.title }}</span>
+    </div>
+    <!--
+    <div *ngFor="let subItem of item.subItems">
+      <span>Title: </span>
+      <span>{{ subItem.title }}</span>
+    </div>
+    -->
+    <div>
+      <span>Content: </span>
+      <span>{{ item.content }}</span>
+    </div>
+    <div>
+      <span>Created at: </span>
+      <span>{{ item.createdAt | date:'medium' }}</span>
+    </div>
+    <div>
+      <button type="button" (click)="deleteToDoItem(item)">Delete</button>
+    </div>
+  </li>
+</ul>
+</div>

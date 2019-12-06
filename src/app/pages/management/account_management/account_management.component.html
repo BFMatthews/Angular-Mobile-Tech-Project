@@ -1,0 +1,206 @@
+<div style="text-align:center" (window:resize)="onResize($event)">
+<h1 style="margin-bottom:30px">Account Management</h1>
+
+<!--  -->
+<ng-template #template>
+  <div class="modal-body text-center">
+    <p>Are you sure that you want to delete this user account?</p>
+    <button type="button" class="btn btn-secondary" (click)="decline()" style="width:45%;margin-right:5px">No</button>
+    <button type="button" class="btn btn-success" (click)="confirm()" style="width:45%;margin-left:5px">Yes</button>
+  </div>
+</ng-template>
+<!--  -->
+
+<div style="width:80%;text-align:center;margin:auto" *ngIf="widthOfWindow > 800">
+<table style="width:100%">
+  <tr>
+    <td style="text-align:left"><p (click)="allAccountsClicked()" style="cursor:pointer">1. All Accounts</p></td>
+    <td *ngIf="displayAllAccounts" style="float:right"><p (click)="allAccountsClicked()" style="transform: rotate(90deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+    <td *ngIf="!displayAllAccounts" style="float:right"><p (click)="allAccountsClicked()" style="transform: rotate(270deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+  </tr>
+</table>
+<table style="width:100%;margin-bottom:20px" *ngIf="displayAllAccounts">
+  <tr>
+    <th>No.</th>
+    <th>Avatar</th>
+    <th style="text-align:left">Full Name</th>
+    <th style="text-align:left">Email Address</th>
+    <th style="text-align:left">Account Type</th>
+    <th>Account Options</th>
+  </tr>
+  <tr *ngFor="let account of allUserAccounts; let i = index">
+    <td>{{i + 1}}.</td>
+    <td>Image</td>
+    <td style="text-align:left">{{account.forename}} {{account.surname}}</td>
+    <td style="text-align:left">{{account.email}}</td>
+    <td *ngIf="account.permission == 'admin'" style="text-align:left">Administrator</td>
+    <td *ngIf="account.permission == 'librarian'" style="text-align:left">Librarian</td>
+    <td *ngIf="account.permission == 'user'" style="text-align:left">User</td>
+    <td>
+      <button type="button" class="btn btn-secondary" style="margin-right:5px" (click)="amendAccountDetails(account.email)">Amend Details</button>
+      <button *ngIf="account.locked == false" type="button" class="btn btn-warning" style="margin-right:5px;" (click)="suspendAccount(account.email)">Lock/Disable</button>
+      <button *ngIf="account.locked == true" type="button" class="btn btn-warning" style="margin-right:5px;" (click)="unsuspendAccount(account.email)">Unlock/Re-enable</button>
+      <button type="button" class="btn btn-danger" (click)="deleteAccount(template, account.email)" [disabled]="account.permission == 'admin'">Delete</button>
+    </td>
+  </tr>
+</table>
+</div>
+
+<div style="width:90%;text-align:center;margin:auto" *ngIf="widthOfWindow < 801">
+  <table style="width:100%">
+  <tr>
+    <td style="text-align:left"><p (click)="allAccountsClicked()" style="cursor:pointer">1. All Accounts</p></td>
+    <td *ngIf="displayAllAccounts" style="float:right"><p (click)="allAccountsClicked()" style="transform: rotate(90deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+    <td *ngIf="!displayAllAccounts" style="float:right"><p (click)="allAccountsClicked()" style="transform: rotate(270deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+  </tr>
+</table>
+
+<table style="width:100%;margin-bottom:20px" *ngIf="displayAllAccounts">
+  <tr>
+    <th style="text-align:left">No.</th>
+    <th style="text-align:left">Full Name</th>
+    <th style="text-align:left">Email Address</th>
+    <th style="text-align:left"></th>
+  </tr>
+  <tr *ngFor="let account of allUserAccounts; let i = index">
+    <td>{{i + 1}}.</td>
+    <td style="text-align:left">{{account.forename}} {{account.surname}}</td>
+    <td style="text-align:left">{{account.email}}</td>
+    <td style="float:right" (click)="change(account)"><i class="fas fa-user-edit" style="font-size:25px"></i></td>
+  </tr>
+  <tr *ngIf="displayExtra" id="accountDetails"><td colspan="4">
+    <div style="border:1px solid black;text-align:left;padding:5px;border-radius:5px">
+      <p><b>Selected Account</b>&nbsp;({{selectedAccountName}}):</p>
+      <p style="margin-bottom:5px">Account Type:&nbsp;{{selectedAccountPermission}}</p>
+
+      <table style="width:100%">
+        <tr>
+          <td>
+            <button type="button" class="btn btn-warning" style="width:100%" (click)="suspendAccount(selectedAccountEmail)" *ngIf="!selectedAccountLocked">Lock</button>
+            <button type="button" class="btn btn-warning" style="width:100%" (click)="unsuspendAccount(selectedAccountEmail)" *ngIf="selectedAccountLocked">Unlock</button>
+          </td>
+          <td><button type="button" class="btn btn-danger" style="width:100%" (click)="deleteAccount(template, selectedAccountEmail)" [disabled]="selectedAccountPermission == 'admin'">Delete</button></td>
+        </tr>
+      </table>
+      
+      <button type="button" class="btn btn-secondary" style="width:100%" (click)="amendAccountDetails(selectedAccountEmail)">Amend Details</button>
+    </div>
+  </td></tr>
+</table>
+</div>
+
+<div style="text-align:center;margin:auto" [ngStyle]="{ 'width': (widthOfWindow < 801 ? '90%' : '80%') }">
+<table style="width:100%">
+  <tr>
+    <td style="text-align:left"><p (click)="addAccountClicked()" style="cursor:pointer">2. Add an Account</p></td>
+    <td *ngIf="displayAddAccount" style="float:right"><p (click)="addAccountClicked()" style="transform: rotate(90deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+    <td *ngIf="!displayAddAccount" style="float:right"><p (click)="addAccountClicked()" style="transform: rotate(270deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+  </tr>
+</table>
+<div *ngIf="displayAddAccount">
+<form style="display:inline-block;" [ngStyle]="{ 'width': (widthOfWindow > 800 ? '40%' : '100%') }" (submit)="onSubmit()">
+  <div class="form-group" style="text-align:left">
+    <label for="register-forename">Forename</label>
+    <input type="text" class="form-control" id="register-forename" name="register-forename" placeholder="Forename" ngClass="{{forenameClass}}" [(ngModel)]="registerObject.forename" (ngModelChange)="forenameChange()">
+  </div>
+  
+  <div class="form-group" style="text-align:left">
+    <label for="register-surname">Surname</label>
+    <input type="text" class="form-control" id="register-surname" name="register-surname" placeholder="Surname" ngClass="{{surnameClass}}" [(ngModel)]="registerObject.surname" (ngModelChange)="surnameChange()">
+  </div>
+
+  <div class="form-group" style="text-align:left">
+    <label for="register-nickname">Nickname</label>
+    <input type="text" class="form-control" id="register-nickname" name="register-nickname" placeholder="Nickname" ngClass="{{nicknameClass}}" [(ngModel)]="registerObject.nickname" (ngModelChange)="nicknameChange()">
+  </div>
+
+  <div class="form-group" style="text-align:left">
+    <label for="register-dob">Date of Birth</label>
+    <input type="date" class="form-control" id="register-dob" name="register-dob" ngClass="{{dobClass}}" [(ngModel)]="registerObject.dob" (ngModelChange)="dobChange()">
+  </div>
+
+  <label style="text-align:left;width:100%">Biological Sex</label>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="register-sex" style="font-weight:normal">Select Sex...</label>
+    </div>
+    <select class="custom-select" id="register-sex" name="register-sex" ngClass="{{sexClass}}" [(ngModel)]="registerObject.sex" (ngModelChange)="sexChange()">
+      <option value="m">Male</option>
+      <option value="f">Female</option>
+      <option value="o">Not Specified</option>
+    </select>
+  </div>
+
+  <div class="form-group" style="text-align:left">
+    <label for="register-email">Email Address</label>
+    <input type="text" class="form-control" id="register-email" placeholder="Email Address" name="register-email" ngClass="{{emailClass}}" [(ngModel)]="registerObject.email" (ngModelChange)="emailChange()">
+  </div>
+
+  <div class="form-group" style="text-align:left">
+    <label for="register-email-confirm">Confirm Email Address</label>
+    <input type="text" class="form-control" id="register-email-confirm" placeholder="Confirm Email Address" name="register-email-confirm" ngClass="{{emailConfirmClass}}" [(ngModel)]="registerObject.emailConfirm" (ngModelChange)="emailConfirmChange()">
+  </div>
+
+  <label style="text-align:left;width:100%">Password</label>
+  <div class="form-group input-group mb-3" style="text-align:left">
+    <input type="password" class="form-control" id="register-password" placeholder="Password" name="register-password" ngClass="{{passwordClass}}" [(ngModel)]="registerObject.password" (ngModelChange)="passwordChange()">
+    <div class="input-group-prepend" (click)="questionPasswordClicked()" style="cursor:pointer">
+      <span class="input-group-text questionMarker" id="basic-addon1" style="border-radius: 0rem 0.25rem 0.25rem 0rem;border-left:0px">?</span>
+    </div>
+  </div>
+
+  <div class="form-group" style="text-align:left">
+    <label for="register-password-confirm">Confirm Password</label>
+    <input type="password" class="form-control" id="register-password-confirm" placeholder="Confirm Password" name="register-password-confirm" ngClass="{{passwordConfirmClass}}" [(ngModel)]="registerObject.passwordConfirm" (ngModelChange)="passwordConfirmChange()">
+  </div>
+
+  <div class="form-group" style="text-align:left">
+    <label for="register-security">Security Question</label>
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="register-security-selector" style="font-weight:normal">Select Question...</label>
+      </div>
+      <select class="custom-select" id="register-security-selector" name="register-security-selector" ngClass="{{securityQuestionClass}}" [(ngModel)]="registerObject.securityQuestion" (ngModelChange)="securityQuestionChange()">
+        <option value="What is your mothers maiden name?">What is your mothers maiden name?</option>
+        <option value="What was the make of your first car?">What was the make of your first car?</option>
+        <option value="In what city was your first job situated?">In what city was your first job situated?</option>
+      </select>
+  </div>
+
+  <div class="form-group input-group mb-3" style="text-align:left">
+    <input [type]="displayAnswerClear ? 'text' : 'password'" class="form-control" id="register-security" placeholder="Security Question Answer" name="register-security" ngClass="{{securityAnswerClass}}" [(ngModel)]="registerObject.securityAnswer" (ngModelChange)="securityAnswerChange()">
+    <div class="input-group-prepend" (click)="displayAnswer()" style="cursor:pointer">
+      <span class="input-group-text questionMarker" id="basic-addon1" style="border-radius: 0rem 0.25rem 0.25rem 0rem;border-left:0px"><i ngClass="{{eyeClass}}"></i></span>
+    </div>
+  </div>
+  </div>
+
+<label style="text-align:left;width:100%">Account Management</label>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="register-type" style="font-weight:normal">Select Account Type...</label>
+    </div>
+    <select class="custom-select" id="register-type" name="register-type" ngClass="{{typeClass}}" [(ngModel)]="registerObject.permission" (ngModelChange)="typeChange()">
+      <option value="user">User</option>
+      <option value="admin">Administrator</option>
+      <option value="librarian">Librarian</option>
+    </select>
+  </div>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="register-locked" style="font-weight:normal">Account Locked?</label>
+    </div>
+    <select class="custom-select" id="register-locked" name="register-locked" ngClass="{{lockedClass}}" [(ngModel)]="accountLocked" (ngModelChange)="lockedChange()">
+      <option value="true">Yes</option>
+      <option value="false">No</option>
+    </select>
+  </div>
+
+  <div class="form-group" style="text-align:left">
+    <input type="submit" class="form-control" id="formGroupExampleInput2" value="Create Account">
+  </div>
+</form>
+</div>
+</div>
+<br>&nbsp;
+</div>

@@ -1,0 +1,237 @@
+<div style="text-align:center" (window:resize)="onResize($event)">
+	<h1>Book List</h1>
+</div>
+<div class="row">
+	<div class="col-xl-9 col-sm-12">
+		<p style="margin-bottom:5px">Please see below a complete list of all books offered by our library, including book filtering and a search form:</p>
+    
+    <div class="row" *ngIf="widthOfWindow > 950">
+
+      <div style="margin-bottom:7.5px;margin-left:12px;margin-right:12px;border:1px solid black;border-radius:6px;padding:5px;width:100%">
+        <p style="margin-bottom:5px">To filter, please select an option and click 'Filter':</p>
+
+        <table style="width:100%">
+          <tr><td style="width:60%">
+            <select class="custom-select" [(ngModel)]="selecting">
+              <option value="default" disabled>Select...</option>
+              <option value="available">Available</option>
+              <option value="not-available">Not Available</option>
+              <option value="on-loan">On Loan</option>
+            </select></td>
+            <td style="width:40%"><button type="button" class="btn btn-secondary" (click)="doFilter()" style="width:100%" [disabled]="selecting == 'default'">Filter</button></td>
+          </tr>
+        </table>
+        
+      </div>
+
+      <table style="width:100%">
+        <tr>
+          <td style="width:50%;text-align:left">
+            <button type="button" class="btn btn-secondary" (click)="getPrevious9()" style="width:35%;margin-left:10px;" [disabled]="startNumber==3">⟵ Previous Page</button>
+          </td>
+          <td style="width:50%;text-align:right">
+            <button type="button" class="btn btn-secondary" (click)="getNext9()" style="width:35%;margin-right:10px;" [disabled]="currentStackedBooks.length <3">Next Page ⟶</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="row" *ngIf="widthOfWindow > 650 && widthOfWindow < 951">
+      <div style="margin-bottom:7.5px;margin-left:12px;margin-right:12px;border:1px solid black;border-radius:6px;padding:5px;width:100%">
+        <p style="margin-bottom:5px">To filter, please select an option and click 'Filter':</p>
+
+        <table style="width:100%">
+          <tr><td style="width:60%">
+            <select class="custom-select" [(ngModel)]="selecting">
+              <option value="default" disabled>Select...</option>
+              <option value="available">Available</option>
+              <option value="not-available">Not Available</option>
+              <option value="on-loan">On Loan</option>
+            </select></td>
+            <td style="width:40%"><button type="button" class="btn btn-secondary" (click)="doFilter()" style="width:100%" [disabled]="selecting == 'default'">Filter</button></td>
+          </tr>
+        </table>
+        
+      </div>
+
+      <table style="width:100%">
+        <tr>
+          <td style="width:50%;text-align:left">
+            <button type="button" class="btn btn-secondary" (click)="getPrevious6()" style="width:35%;margin-left:10px;" [disabled]="startNumber2s==3">⟵ Previous Page</button>
+          </td>
+          <td style="width:50%;text-align:right">
+            <button type="button" class="btn btn-secondary" (click)="getNext6()" style="width:35%;margin-right:10px;" [disabled]="currentStackedBooks2s.length <3">Next Page ⟶</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="row" *ngIf="widthOfWindow < 651">
+      <div style="margin-bottom:7.5px;margin-left:12px;margin-right:12px;border:1px solid black;border-radius:6px;padding:5px;width:100%">
+        <p style="margin-bottom:5px">To filter, please select an option and click 'Filter':</p>
+
+        <table style="width:100%">
+          <tr><td style="width:60%">
+            <select class="custom-select" [(ngModel)]="selecting">
+              <option value="default" disabled>Select...</option>
+              <option value="available">Available</option>
+              <option value="not-available">Not Available</option>
+              <option value="on-loan">On Loan</option>
+            </select></td>
+            <td style="width:40%"><button type="button" class="btn btn-secondary" (click)="doFilter()" style="width:100%" [disabled]="selecting == 'default'">Filter</button></td>
+          </tr>
+        </table>
+        
+      </div>
+      <table style="width:100%">
+        <tr>
+          <td style="width:50%;text-align:left">
+            <button type="button" class="btn btn-secondary" (click)="getPrevious3()" style="width:90%;margin-left:10px;" [disabled]="startNumber1s==3">⟵ Previous Page</button>
+          </td>
+          <td style="width:50%;text-align:right">
+            <button type="button" class="btn btn-secondary" (click)="getNext3()" style="width:90%;margin-right:10px;" [disabled]="currentStackedBooks1s.length <3">Next Page ⟶</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- 1x3 display -->
+    <div *ngIf="widthOfWindow > 950">
+		<div class="row" *ngFor="let book of currentStackedBooks; let i = index">
+			<div *ngFor="let object of book" style="width:33%">
+				<div class="col-lg">
+					<table style="width:100%">
+						<tr style="height:177px">
+							<td style="width:35%"><img src="{{object.image}}" width="105px"></td>
+							<td style="width:65%">
+								<p class="inline">Title:&nbsp;</p>
+								<p style="font-weight:bold" class="inline">{{object.title}}</p><br>
+								<p class="inline">Author:&nbsp;</p>
+								<p style="font-weight:bold" class="inline">{{object.author}}</p><br>
+								<p class="inline">ISBN:&nbsp;</p>
+								<p style="font-weight:bold" class="inline">{{object.isbn}}</p><br>
+								<p class="inline">Publication Year:&nbsp;</p>
+								<p style="font-weight:bold" class="inline">{{object.year}}</p><br>
+								<p class="inline" *ngIf="object.status == 'available'"
+									style="font-size:1.25rem;color:#5ca25c">•&nbsp;</p>
+								<p class="inline" *ngIf="object.status == 'available'">Status:&nbsp;</p>
+								<p style="font-weight:bold" class="inline" *ngIf="object.status == 'available'">Available</p>
+								<p class="inline" *ngIf="object.status == 'not-available' || object.status == 'on-loan'"
+									style="font-size:1.25rem;color:red">•&nbsp;</p>
+								<p class="inline" *ngIf="object.status == 'not-available' || object.status == 'on-loan'">Status:&nbsp;</p>
+								<p style="font-weight:bold" class="inline" *ngIf="object.status == 'not-available' || object.status == 'on-loan'">Not Available</p>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<button type="button" class="btn btn-secondary" style="width:100%" (click)="viewMoreClicked(object.isbn)">More</button>
+							</td>
+						</tr>
+            <tr>&nbsp;</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+    </div>
+
+    <!-- 1x2 display -->
+    <div *ngIf="widthOfWindow > 650 && widthOfWindow < 951">
+    <div class="row" *ngFor="let book of currentStackedBooks2s; let i = index">
+			<div *ngFor="let object of book" style="width:50%">
+				<div class="col-lg">
+					<table style="width:100%">
+						<tr style="height:177px">
+							<td style="width:35%"><img src="{{object.image}}" width="105px"></td>
+							<td style="width:65%">
+								<p class="inline">Title:&nbsp;</p>
+								<p style="font-weight:bold" class="inline">{{object.title}}</p><br>
+								<p class="inline">Author:&nbsp;</p>
+								<p style="font-weight:bold" class="inline">{{object.author}}</p><br>
+								<p class="inline">ISBN:&nbsp;</p>
+								<p style="font-weight:bold" class="inline">{{object.isbn}}</p><br>
+								<p class="inline">Publication Year:&nbsp;</p>
+								<p style="font-weight:bold" class="inline">{{object.year}}</p><br>
+								<p class="inline" *ngIf="object.status == 'available'"
+									style="font-size:1.25rem;color:#5ca25c">•&nbsp;</p>
+								<p class="inline" *ngIf="object.status == 'available'">Status:&nbsp;</p>
+								<p style="font-weight:bold" class="inline" *ngIf="object.status == 'available'">Available</p>
+								<p class="inline" *ngIf="object.status == 'not-available' || object.status == 'on-loan'"
+									style="font-size:1.25rem;color:red">•&nbsp;</p>
+								<p class="inline" *ngIf="object.status == 'not-available' || object.status == 'on-loan'">Status:&nbsp;</p>
+								<p style="font-weight:bold" class="inline" *ngIf="object.status == 'not-available' || object.status == 'on-loan'">Not Available</p>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<button type="button" class="btn btn-secondary" style="width:100%" (click)="viewMoreClicked(object.isbn)">More</button>
+							</td>
+						</tr>
+            <tr>&nbsp;</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+    </div>
+
+    <!-- 1x1 display -->
+    <div *ngIf="widthOfWindow < 651">
+    <!-- <div class="row" *ngFor="let book of currentStackedBooks1s; let i = index"> -->
+			<div *ngFor="let object of currentStackedBooks1s" style="width:100%">
+				<div class="col-lg">
+					<table style="width:100%">
+						<tr style="height:177px">
+							<td style="width:35%"><img src="{{object.image}}" width="105px"></td>
+							<td style="width:65%">
+								<p class="inline">Title:&nbsp;</p>
+								<p style="font-weight:bold" class="inline">{{object.title}}</p><br>
+								<p class="inline">Author:&nbsp;</p>
+								<p style="font-weight:bold" class="inline">{{object.author}}</p><br>
+								<p class="inline">ISBN:&nbsp;</p>
+								<p style="font-weight:bold" class="inline">{{object.isbn}}</p><br>
+								<p class="inline">Publication Year:&nbsp;</p>
+								<p style="font-weight:bold" class="inline">{{object.year}}</p><br>
+								<p class="inline" *ngIf="object.status == 'available'"
+									style="font-size:1.25rem;color:#5ca25c">•&nbsp;</p>
+								<p class="inline" *ngIf="object.status == 'available'">Status:&nbsp;</p>
+								<p style="font-weight:bold" class="inline" *ngIf="object.status == 'available'">Available</p>
+								<p class="inline" *ngIf="object.status == 'not-available' || object.status == 'on-loan'"
+									style="font-size:1.25rem;color:red">•&nbsp;</p>
+								<p class="inline" *ngIf="object.status == 'not-available' || object.status == 'on-loan'">Status:&nbsp;</p>
+								<p style="font-weight:bold" class="inline" *ngIf="object.status == 'not-available' || object.status == 'on-loan'">Not Available</p>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<button type="button" class="btn btn-secondary" style="width:100%" (click)="viewMoreClicked(object.isbn)">More</button>
+							</td>
+						</tr>
+            <tr>&nbsp;</tr>
+					</table>
+				</div>
+			</div>
+		<!-- </div> -->
+    </div>
+	</div>
+	<div class="col-xl-3 col-sm-12">Use the search form to look through our system:
+		<form (submit)="onSubmit()">
+			<br>
+			<div class="form-group" style="text-align:left">
+				<label for="search-title">Title</label>
+				<input type="text" class="form-control" id="search-title" name="search-title" placeholder="Title" [(ngModel)]="searchObject.title">
+      </div>
+				<div class="form-group" style="text-align:left">
+					<label for="search-isbn">ISBN</label>
+					<input type="text" class="form-control" id="search-isbn" name="search-isbn" placeholder="ISBN" [(ngModel)]="searchObject.isbn">
+      </div>
+					<div class="form-group" style="text-align:left">
+						<label for="search-author">Author</label>
+						<input type="text" class="form-control" id="search-author" name="search-author" placeholder="Author" [(ngModel)]="searchObject.author">
+      </div>
+						<div class="form-group" style="text-align:left">
+							<label for="search-date">Publication Year</label>
+							<input type="text" class="form-control" id="search-date" name="search-date" placeholder="Publication Year" [(ngModel)]="searchObject.publication">
+      </div>
+							<button class="btn btn-outline-success my-2 my-sm-0 form-group" type="submit" style="width:100%">Search</button>
+		</form>
+	</div>
+</div>

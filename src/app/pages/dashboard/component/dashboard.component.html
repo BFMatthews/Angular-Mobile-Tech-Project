@@ -1,0 +1,46 @@
+<div style="text-align:center">
+<h1>{{this.user.forename}}'s Dashboard</h1>
+</div>
+
+<div class="row" style="padding:10px">
+  <div class="col-lg-4 col-md-4 col-sm-4" >
+    <div class="col-sm-12" style="border:1px solid black;border-radius:10px;text-align:center">
+        Total Number of Books
+        <p style="font-size:45px">{{bookNumbers.total}}</p>
+    </div>
+  </div>
+  <div class="col-lg-4 col-md-4 col-sm-4" style="width:100%" >
+    <div class="col-sm-12" style="text-align:center">
+        <img src="https://benfmatthews.files.wordpress.com/2019/11/logo.jpg" style="max-width:70%">
+    </div>
+</div>
+  <div class="col-lg-4 col-md-4 col-sm-4" >
+    <div class="col-sm-12" style="border:1px solid black;border-radius:10px;text-align:center">
+        Total Number of Available Books
+        <p style="font-size:45px">{{bookNumbers.available}}</p>
+    </div>
+  </div>
+</div>
+
+<div class="row" style="padding:10px">
+  <div class="col-lg-6 col-md-6 col-sm-6" >
+    <div class="col-sm-12" style="border:1px solid black;border-radius:10px;text-align:center">
+        <u>Recommended Reading</u>
+        <img src="{{randomBook[0].image}}" class="d-block w-100" alt="..." (click)="viewMoreClicked(randomBook[0].isbn)" style="cursor:pointer;max-width:50%;margin:auto;margin-top:15px;margin-bottom:15px">
+    </div>
+  </div>
+  <div class="col-lg-6 col-md-6 col-sm-6" >
+    <div class="col-sm-12" style="border:1px solid black;border-radius:10px;text-align:center">
+      <p><u>My Book Breakdown</u></p>
+      <p>My Loaned Books</p>
+      <p style="font-size:45px">{{bookNumbers.loaned}}</p>
+      <p>My Pending Book Loans</p>
+      <p style="font-size:45px">{{bookNumbers.pendingLoan}}</p>
+      <p>My Pending Book Returns</p>
+      <p style="font-size:45px">{{bookNumbers.pendingReturn}}</p>
+      <p>My Overdue Books</p>
+      <p style="font-size:45px">{{bookNumbers.overdue}}</p>
+      <button type="button" class="btn btn-secondary" style="margin-right:5px;margin-bottom:15px" (click)="onLoanedClick()">View Detailed Breakdown</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+label {
+  font-weight:bold;
+}
+
+input[type=submit] {
+  background-color:rgb(236, 194, 76);
+}
+
+input[type=submit]:hover {
+  background-color:rgb(236, 155, 33);
+}

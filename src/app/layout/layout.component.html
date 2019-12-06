@@ -1,0 +1,106 @@
+<div class="container-fluid" style="min-height: calc(100vh - 70px);" (window:resize)="onResize($event)">
+  <div class="row">
+    <div class="col-12">
+      <nav class="navbar navbar-expand-sm navbar-light" style="background-color: #efefef;-webkit-box-shadow: 0 6px 4px -4px black;-moz-box-shadow: 0 6px 4px -4px black;box-shadow: 0 6px 4px -4px black;">
+        <a class="navbar-brand" routerLink="/general/books" [ngStyle]="{ 'font-size': (widthOfWindowing < 576 ? '16.75px' : '1.25rem') }">Oracle & Crown Libraries</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="btn-group collapse navbar-collapse " style="margin-left:auto;margin-right:0;flex-grow:0" *ngIf="!isLoggedIn()">
+          <ul class="navbar-nav" style="margin-right:1rem">
+            <li class="nav-item" routerLinkActive="active">
+              <a class="nav-link p-2 text-dark" routerLink="/general/books">Home</a>
+            </li>
+            <li class="nav-item" routerLinkActive="active">
+              <a class="nav-link p-2 text-dark" routerLink="/book/list">Book List</a>
+            </li>
+            <li class="nav-item" routerLinkActive="active">
+              <a class="nav-link p-2 text-dark" routerLink="/auth/login">Login</a>
+            </li>
+          </ul>
+          <a class="btn btn-outline-primary" style="border-radius:0.25rem;margin-right:10px;" routerLink="/auth/register">Sign up</a>
+          <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-radius:0.25rem">
+            Menu
+          </button>
+          <div class="dropdown-menu" style="left:auto;right:0;top:105%">
+            <a class="dropdown-item" routerLink="/auth/login">Login</a>
+            <a class="dropdown-item" routerLink="/auth/register">Register</a>
+            <a class="dropdown-item" routerLink="/auth/reset">Reset Password</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" routerLink="/general/about">About</a>
+          </div>
+        </div> 
+
+        <div class="btn-group collapse navbar-collapse " style="margin-left:auto;margin-right:0;flex-grow:0" *ngIf="isLoggedIn()">
+          <ul class="navbar-nav" style="margin-right:1rem">
+            <li class="nav-item" routerLinkActive="active">
+              <a class="nav-link p-2 text-dark" routerLink="/general/books">Home</a>
+            </li>
+            <li class="nav-item" routerLinkActive="active">
+              <a class="nav-link p-2 text-dark" routerLink="/book/list">Book List</a>
+            </li>
+          </ul>
+         
+          <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-right:10px;border-radius:0.25rem">
+            {{currentUser.forename}}&nbsp;{{currentUser.surname}}
+          </button>
+          <div class="dropdown-menu" style="left:auto;right:0;top:105%">
+            <a class="dropdown-item" routerLink="/account/profile">My Profile</a>
+            <a class="dropdown-item" routerLink="/dashboard">Dashboard</a>
+            <a class="dropdown-item" routerLink="/account/settings">Account Settings</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" routerLink="/general/about">About</a>
+            <a class="dropdown-item" routerLink="/management/account" *ngIf="isAdmin()">Account Management</a>
+            <a class="dropdown-item" routerLink="/management/books" *ngIf="isLibrarian()">Book Management</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" (click)="doLogout()" style="cursor:pointer">Logout</a>
+          </div>
+        </div>
+
+        <!-- Logged out menu used when small device is used -->
+        <div class="collapse navbar-collapse" id="navbarNav" *ngIf="!isLoggedIn() && showOldMenu">
+          <ul class="navbar-nav" data-toggle="collapse" data-target="#navbarNav">
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="/general/books">Home</a></li>
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="/book/list">Book List</a></li>
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="/general/about">About</a></li>
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="/auth/login">Login</a></li>
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="/auth/register">Register</a></li>
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="/auth/reset">Password Reset</a></li>
+          </ul>
+        </div>
+
+        <!-- Logged in menu used when small device is used -->
+        <div class="collapse navbar-collapse" id="navbarNav" *ngIf="isLoggedIn() && showOldMenu">
+          <ul class="navbar-nav" data-toggle="collapse" data-target="#navbarNav">
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="/general/books">Home</a></li>
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="/book/list">Book List</a></li>
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="/account/profile">My Profile</a></li>
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="/dashboard">Dashboard</a></li>
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="/account/settings">Account Settings</a></li>
+            <li><hr style="background-color:black"></li>
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" routerLink="/general/about">About</a></li>
+            <li class="nav-item" routerLinkActive="active" *ngIf="isAdmin()"><a class="nav-link" routerLink="/management/account">Account Management</a></li>
+            <li class="nav-item" routerLinkActive="active" *ngIf="isLibrarian()"><a class="nav-link" routerLink="/management/books">Book Management</a></li>
+            <li><hr style="background-color:black"></li>
+            <li class="nav-item" routerLinkActive="active"><a class="nav-link" (click)="doLogout()" routerLink="/">Logout</a></li>
+          </ul>
+        </div>
+
+        </nav>
+        <br>
+        <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <nav class="navbar fixed-bottom navbar-expand-sm navbar-light" style="text-align:center;background-color: #86ccc1;position:relative">
+        <span class="navbar-text" style="margin:0px;color:white;width:100%;font-family:sans-serif">COPYRIGHT © 2019 ORACLE & CROWN. ALL RIGHTS RESERVED</span>
+      </nav>
+    </div>
+  </div>
+</div>

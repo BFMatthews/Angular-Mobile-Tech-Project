@@ -1,0 +1,53 @@
+<div style="text-align:center" (window:resize)="onResize($event)">
+<h1 style="margin-bottom:30px">Book Search Results</h1>
+
+<div style="width:80%;text-align:center;margin:auto" *ngIf="widthOfWindow > 800">
+<!-- Table used when viewing in desktop -->
+<table style="width:100%;margin-bottom:20px">
+  <tr>
+    <th>No.</th>
+    <th style="text-align:left">Book Title</th>
+    <th style="text-align:left">Book Author</th>
+    <th style="text-align:left">Book ISBN</th>
+    <th style="text-align:left">Book Publication</th>
+    <th>Book Options</th>
+  </tr>
+  <tr *ngFor="let book of searchResultsJSON; let i = index">
+    <td>{{i + 1}}.</td>
+    <td style="text-align:left">{{book.title}}</td>
+    <td style="text-align:left">{{book.author}}</td>
+    <td style="text-align:left">{{book.isbn}}</td>
+    <td style="text-align:left">{{book.year}}</td>
+    <td>
+      <button type="button" class="btn btn-secondary" style="margin-right:5px" (click)="viewBook(book.isbn)">View Details</button>
+    </td>
+  </tr>
+</table></div>
+
+<div style="width:90%;text-align:center;margin:auto" *ngIf="widthOfWindow < 801">
+
+<table style="width:100%">
+  <tr>
+    <th>No.</th>
+    <th style="text-align:left">Title</th>
+    <th style="text-align:left">Author</th>
+    <th style="text-align:left"></th>
+  </tr>
+  <tr *ngFor="let book of searchResultsJSON; let i = index">
+    <td style="text-align:left">{{i + 1}}.</td>
+    <td style="text-align:left">{{book.title}}</td>
+    <td style="text-align:left">{{book.author}}</td>
+    <td style="float:right" (click)="change(book)"><i class="fas fa-info-circle" style="font-size:25px"></i></td>
+  </tr>
+  <tr *ngIf="displayExtra" id="bookDetails"><td colspan="4">
+    <div style="border:1px solid black;text-align:left;padding:5px;border-radius:5px">
+      <p><b>Selected Book</b>&nbsp;({{selectedBookTitle}}):</p>
+      <p style="margin-bottom:0px">ISBN:&nbsp;{{selectedBookISBN}}</p>
+      <p style="margin-bottom:5px">Year:&nbsp;{{selectedBookYear}}</p>
+      <button type="button" class="btn btn-secondary" style="width:100%" (click)="viewBook(selectedBookISBN)">View Details</button>
+    </div>
+  </td></tr>
+</table>
+
+</div>
+</div>

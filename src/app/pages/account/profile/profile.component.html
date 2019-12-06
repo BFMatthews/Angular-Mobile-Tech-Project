@@ -1,0 +1,77 @@
+<div style="text-align:center" (window:resize)="onResize($event)">
+<h1>My Profile</h1>
+<br>
+<ngx-avatar size="200" initialsSize="2" cornerRadius="15"  [round]="false" name="{{ngModelObj.forename}} {{ngModelObj.surname}}" *ngIf="avatarUseName"></ngx-avatar>
+<ngx-avatar size="200" initialsSize="2" cornerRadius="15"  [round]="false" facebookId="{{ngModelObj.avatarID}}" *ngIf="avatarUseF"></ngx-avatar>
+<ngx-avatar size="200" initialsSize="2" cornerRadius="15"  [round]="false" twitterId="{{ngModelObj.avatarID}}" *ngIf="avatarUseT"></ngx-avatar>
+<ngx-avatar size="200" initialsSize="2" cornerRadius="15"  [round]="false" skypeId="{{ngModelObj.avatarID}}" *ngIf="avatarUseS"></ngx-avatar>
+<ngx-avatar size="200" initialsSize="2" cornerRadius="15"  [round]="false" githubId="{{ngModelObj.avatarID}}" *ngIf="avatarUseG"></ngx-avatar>
+<br>
+<br>
+<h4 style="color:gray">Personal Details</h4>
+<form style="display:inline-block" (submit)="onSubmit()" [ngStyle]="{ 'width': (widthOfWindow > 700 ? '40%' : '80%') }">
+  <div class="form-group" style="text-align:left">
+    <label for="profile-forename">Forename</label>
+    <input type="text" class="form-control" id="profile-forename" name="profile-forename" placeholder="Forename" [(ngModel)]="ngModelObj.forename">
+  </div>
+  <div class="form-group" style="text-align:left">
+    <label for="profile-Surname">Surname</label>
+    <input type="text" class="form-control" id="profile-Surname" name="profile-Surname" placeholder="Surname" [(ngModel)]="ngModelObj.surname">
+  </div>
+  <div class="form-group" style="text-align:left">
+    <label for="profile-Nickname">Nickname</label>
+    <input type="text" class="form-control" id="profile-Nickname" name="profile-Nickname" placeholder="Nickname" [(ngModel)]="ngModelObj.nickname">
+  </div>
+  <div class="form-group" style="text-align:left">
+    <label for="profile-dob">Date of Birth</label>
+    <input type="date" class="form-control" id="profile-dob" name="profile-dob" [(ngModel)]="ngModelObj.dob">
+  </div>
+  <label style="text-align:left;width:100%">Biological Sex</label>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="profile-sex" style="font-weight:normal">Options...</label>
+    </div>
+    <select class="custom-select" id="profile-sex" name="profile-sex" [(ngModel)]="ngModelObj.sex">
+      <option selected disabled>Select Sex</option>
+      <option value="m">Male</option>
+      <option value="f">Female</option>
+      <option value="o">Not Specified</option>
+    </select>
+  </div>
+  <label style="text-align:left;width:100%">Email Address</label>
+  <div class="form-group input-group mb-3" style="text-align:left">
+    <input type="text" class="form-control" id="profile-password" placeholder="Email Address" name="profile-password" disabled style="background-color:#efefef" [(ngModel)]="theUserObj.email">
+    <div class="input-group-prepend" (click)="questionEmailClicked()" style="cursor:pointer">
+      <span class="input-group-text questionMarker" id="basic-addon1" style="border-radius: 0rem 0.25rem 0.25rem 0rem;border-left:0px">?</span>
+    </div>
+  </div>
+  <div class="form-group" style="text-align:left">
+    <label for="profile-Password">Password</label><br>
+    <label for="profile-Password" style="font-weight:normal">Looking to change your password? Visit the <i>Account Settings</i> page to do this.</label>
+  </div>
+<h4 style="color:gray">Advanced Settings</h4>
+<br>
+  <label style="text-align:left;width:100%">Social Media Avatar Category<label style="font-weight:normal">&nbsp;(Optional)</label></label>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="profile-avatarCategory" style="font-weight:normal">Options...</label>
+    </div>
+    <select class="custom-select" id="profile-avatarCategory" name="profile-avatarCategory" [(ngModel)]="ngModelObj.avatarCategory">
+      <option value="n">Use Name Instead</option>
+      <option value="f">Facebook</option>
+      <option value="t">Twitter</option>
+      <option value="s">Skype</option>
+      <option value="g">GitHub</option>
+    </select>
+  </div>
+
+  <div class="form-group" style="text-align:left">
+    <label for="profile-avatarID">Avatar ID</label><label style="font-weight:normal">&nbsp;(Optional)</label>
+    <input type="text" class="form-control" id="profile-avatarID" name="profile-avatarID" [(ngModel)]="ngModelObj.avatarID" placeholder="Avatar ID" [disabled]="ngModelObj.avatarCategory == 'n'">
+  </div>
+  
+  <div class="form-group" style="text-align:left">
+    <input type="submit" class="form-control" id="formGroupExampleInput2" value="Update Details">
+  </div>
+</form>
+</div>

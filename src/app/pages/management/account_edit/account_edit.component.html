@@ -1,0 +1,119 @@
+<div style="text-align:center" (window:resize)="onResize($event)">
+<h1 style="margin-bottom:30px">Amend Account Details</h1>
+
+<form style="display:inline-block;width:40%" (submit)="onSubmit()" [ngStyle]="{ 'width': (widthOfWindow > 700 ? '40%' : '80%') }">
+  <div class="form-group" style="text-align:left">
+    <label for="register-forename">Forename</label>
+    <input type="text" class="form-control" id="register-forename" name="register-forename" placeholder="Forename" [(ngModel)]="userObjEdit.forename">
+  </div>
+  
+  <div class="form-group" style="text-align:left">
+    <label for="register-surname">Surname</label>
+    <input type="text" class="form-control" id="register-surname" name="register-surname" placeholder="Surname" [(ngModel)]="userObjEdit.surname">
+  </div>
+
+  <div class="form-group" style="text-align:left">
+    <label for="register-nickname">Nickname</label>
+    <input type="text" class="form-control" id="register-nickname" name="register-nickname" placeholder="Nickname" ngClass="{{nicknameClass}}" [(ngModel)]="userObjEdit.nickname">
+  </div>
+
+  <div class="form-group" style="text-align:left">
+    <label for="register-dob">Date of Birth</label>
+    <input type="date" class="form-control" id="register-dob" name="register-dob" ngClass="{{dobClass}}" [(ngModel)]="userObjEdit.dob">
+  </div>
+
+  <label style="text-align:left;width:100%">Biological Sex</label>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="register-sex" style="font-weight:normal">Select Sex...</label>
+    </div>
+    <select class="custom-select" id="register-sex" name="register-sex" ngClass="{{sexClass}}" [(ngModel)]="userObjEdit.sex">
+      <option value="m">Male</option>
+      <option value="f">Female</option>
+      <option value="o">Not Specified</option>
+    </select>
+  </div>
+
+  <div class="form-group" style="text-align:left">
+    <label for="register-email">Email Address</label>
+    <input type="text" class="form-control" id="register-email" placeholder="Email Address" name="register-email" ngClass="{{emailClass}}" [(ngModel)]="userObjEdit.email" disabled>
+  </div>
+
+  <label style="text-align:left;width:100%">Password</label>
+  <div class="form-group input-group mb-3" style="text-align:left">
+    <input type="password" class="form-control" id="register-password" placeholder="Password" name="register-password" ngClass="{{passwordClass}}" [(ngModel)]="userObjEdit.password">
+    <div class="input-group-prepend" (click)="questionPasswordClicked()" style="cursor:pointer">
+      <span class="input-group-text questionMarker" id="basic-addon1" style="border-radius: 0rem 0.25rem 0.25rem 0rem;border-left:0px">?</span>
+    </div>
+  </div>
+
+  <div class="form-group" style="text-align:left">
+    <label for="register-password-confirm">Confirm Password</label>
+    <input type="password" class="form-control" id="register-password-confirm" placeholder="Confirm Password" name="register-password-confirm" ngClass="{{passwordConfirmClass}}" [(ngModel)]="userObjEdit.passwordConfirm">
+  </div>
+
+  <label style="text-align:left;width:100%">Avatar Options</label>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="register-type" style="font-weight:normal">Select Avatar Category...</label>
+    </div>
+    <select class="custom-select" id="register-avatarCategory" name="register-avatarCategory" [(ngModel)]="userObjEdit.avatarCategory">
+      <option value="n" selected>Use Name Instead</option>
+      <option value="f">Facebook</option>
+      <option value="t">Twitter</option>
+      <option value="s">Skype</option>
+      <option value="g">GitHub</option>
+    </select>
+  </div>
+
+  <div class="form-group" style="text-align:left">
+    <input type="text" class="form-control" id="register-avatarID" name="register-avatarID" [(ngModel)]="userObjEdit.avatarID" placeholder="Avatar ID" [disabled]="userObjEdit.avatarCategory == 'n'">
+  </div>
+
+  <div class="form-group" style="text-align:left">
+    <label for="register-security">Security Question</label>
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="register-security-selector" style="font-weight:normal">Select Question...</label>
+      </div>
+      <select class="custom-select" id="register-security-selector" name="register-security-selector" ngClass="{{securityQuestionClass}}" [(ngModel)]="userObjEdit.securityQuestion">
+        <option value="What is your mothers maiden name?">What is your mothers maiden name?</option>
+        <option value="What was the make of your first car?">What was the make of your first car?</option>
+        <option value="In what city was your first job situated?">In what city was your first job situated?</option>
+      </select>
+  </div>
+
+  <div class="form-group input-group mb-3" style="text-align:left">
+    <input [type]="displayAnswerClear ? 'text' : 'password'" class="form-control" id="register-security" placeholder="Security Question Answer" name="register-security" ngClass="{{securityAnswerClass}}" [(ngModel)]="userObjEdit.securityAnswer">
+    <div class="input-group-prepend" (click)="displayAnswer()" style="cursor:pointer">
+      <span class="input-group-text questionMarker" id="basic-addon1" style="border-radius: 0rem 0.25rem 0.25rem 0rem;border-left:0px"><i ngClass="{{eyeClass}}"></i></span>
+    </div>
+  </div>
+  </div>
+
+<label style="text-align:left;width:100%">Account Management</label>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="register-type" style="font-weight:normal">Select Account Type...</label>
+    </div>
+    <select class="custom-select" id="register-type" name="register-type" ngClass="{{typeClass}}" [(ngModel)]="userObjEdit.permission">
+      <option value="user">User</option>
+      <option value="admin">Administrator</option>
+      <option value="librarian">Librarian</option>
+    </select>
+  </div>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="register-locked" style="font-weight:normal">Account Locked?</label>
+    </div>
+    <select class="custom-select" id="register-locked" name="register-locked" ngClass="{{lockedClass}}" [(ngModel)]="userObjEdit.locked">
+      <option value="true">Yes</option>
+      <option value="false">No</option>
+    </select>
+  </div>
+
+  <div class="form-group" style="text-align:left">
+    <input type="submit" class="form-control" id="formGroupExampleInput2" value="Update Account">
+  </div>
+</form>
+</div>

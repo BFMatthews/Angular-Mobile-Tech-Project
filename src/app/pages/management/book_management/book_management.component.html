@@ -1,0 +1,309 @@
+<div style="text-align:center" (window:resize)="onResize($event)">
+<h1 style="margin-bottom:30px">Book Management</h1>
+
+<!--  -->
+<ng-template #template>
+  <div class="modal-body text-center">
+    <p>Are you sure that you want to delete this book?</p>
+    <button type="button" class="btn btn-secondary" (click)="decline()" style="width:45%;margin-right:5px">No</button>
+    <button type="button" class="btn btn-success" (click)="confirm()" style="width:45%;margin-left:5px">Yes</button>
+  </div>
+</ng-template>
+<!--  -->
+
+<div *ngIf="allBookRequests.length > 0" style="text-align:center;margin:auto;border:1.5px dashed black;border-radius:8px;padding:10px;margin-bottom:10px;" [ngStyle]="{ 'width': (widthOfWindow > 800 ? '80%' : '100%') }">
+  <span><b>ATTENTION!</b> You have pending rental <i>requests</i>.&nbsp;</span>
+  <span class="fake-link" (click)="displayActionClicked()">Click Here</span><label style="font-weight:normal;margin:0px">&nbsp;to action.</label>
+
+  <table style="width:100%;text-align:center;margin:auto;margin-top:10px" *ngIf="displayBookActioning && widthOfWindow > 800">
+    <tr>
+      <th>No.</th>
+      <th style="text-align:left">Title</th>
+      <th style="text-align:left">ISBN</th>
+      <th style="text-align:left">Requestee</th>
+      <th style="text-align:left">Request Date</th>
+      <th>Request Options</th>
+    </tr>
+    <tr *ngFor="let request of allBookRequests; let i = index">
+      <td>{{i + 1}}.</td>
+      <td style="text-align:left">{{request.title}}</td>
+      <td style="text-align:left">{{request.isbn}}</td>
+      <td style="text-align:left">{{request.email}}</td>
+      <td style="text-align:left">{{request.date | date:'medium'}}</td>
+      <td>
+        <button type="button" class="btn btn-success" style="margin-right:5px" (click)="grantRequest(request)">Accept Request</button>
+        <button type="button" class="btn btn-danger" (click)="denyRequest(request)">Deny Request</button>
+      </td>
+    </tr>
+  </table>
+
+  <table style="width:100%;text-align:center;margin:auto;margin-top:10px" *ngIf="displayBookActioning && widthOfWindow < 801">
+    <tr>
+      <th style="text-align:left;width:10%">No.</th>
+      <th style="text-align:left;width:70%">Title</th>
+      <th style="text-align:center;width:20%">Action</th>
+    </tr>
+    <tr *ngFor="let request of allBookRequests; let i = index">
+      <td style="text-align:left">{{i + 1}}.</td>
+      <td style="text-align:left">{{request.title}}</td>
+      <td style="text-align:center" (click)="change3(request)"><i class="fas fa-exclamation-triangle"></i></td>
+    </tr>
+    <tr *ngIf="displayExtra3" id="bookRequestDetails"><td colspan="3">
+      <div style="border:1px solid black;text-align:left;padding:5px;border-radius:5px">
+        <p><b>Selected Book</b>&nbsp;({{selectedBookRequest.title}}):</p>
+        <p style="margin-bottom:0px">ISBN:&nbsp;{{selectedBookRequest.isbn}}</p>
+        <p style="margin-bottom:0px">Requestee:&nbsp;{{selectedBookRequest.email}}</p>
+        <p style="margin-bottom:5px">Date:&nbsp;{{selectedBookRequest.date | date:'medium'}}</p>
+
+        <table style="width:100%">
+          <tr>
+            <td style="width:50%"><button type="button" class="btn btn-success" style="margin-right:5px;width:100%" (click)="grantRequest(selectedBookRequest)">Accept Request</button></td>
+            <td style="width:50%"><button type="button" class="btn btn-danger" style="width:100%" (click)="denyRequest(selectedBookRequest)">Deny Request</button></td>
+          </tr>
+        </table>
+      </div>
+  </td></tr>
+  </table>
+</div>
+
+<div *ngIf="allBookReturns.length > 0" style="text-align:center;margin:auto;border:1.5px dashed black;border-radius:8px;padding:10px;margin-bottom:10px;" [ngStyle]="{ 'width': (widthOfWindow > 800 ? '80%' : '100%') }">
+  <span><b>ATTENTION!</b> You have pending rental <i>returns</i>.&nbsp;</span>
+  <span class="fake-link" (click)="displayActionReturnClicked()">Click Here</span><label style="font-weight:normal;margin:0px">&nbsp;to action.</label>
+
+  <table *ngIf="displayBookReturnActioning && widthOfWindow > 800" style="width:100%;text-align:center;margin:auto;margin-top:10px">
+    <tr>
+      <th>No.</th>
+      <th style="text-align:left">Title</th>
+      <th style="text-align:left">ISBN</th>
+      <th style="text-align:left">Returnee</th>
+      <th style="text-align:left">Return Date</th>
+      <th>Return Options</th>
+    </tr>
+    <tr *ngFor="let request of allBookReturns; let i = index">
+      <td>{{i + 1}}.</td>
+      <td style="text-align:left">{{request.title}}</td>
+      <td style="text-align:left">{{request.isbn}}</td>
+      <td style="text-align:left">{{request.email}}</td>
+      <td style="text-align:left">{{request.date | date:'medium'}}</td>
+      <td>
+        <button type="button" class="btn btn-success" style="margin-right:5px" (click)="grantRequestReturn(request)">Accept Return</button>
+        <button type="button" class="btn btn-danger" (click)="denyRequestReturn(request)">Deny Return</button>
+      </td>
+    </tr>
+  </table>
+
+  <table *ngIf="displayBookReturnActioning && widthOfWindow < 801" style="width:100%;text-align:center;margin:auto;margin-top:10px">
+    <tr>
+      <th style="text-align:left;width:10%">No.</th>
+      <th style="text-align:left;width:70%">Title</th>
+      <th style="text-align:center;width:20%">Action</th>
+    </tr>
+    <tr *ngFor="let request of allBookReturns; let i = index">
+      <td style="text-align:left">{{i + 1}}.</td>
+      <td style="text-align:left">{{request.title}}</td>
+      <td style="text-align:center" (click)="change4(request)"><i class="fas fa-exclamation-triangle"></i></td>
+    </tr>
+    <tr *ngIf="displayExtra4" id="bookReturnDetails"><td colspan="3">
+      <div style="border:1px solid black;text-align:left;padding:5px;border-radius:5px">
+        <p><b>Selected Book</b>&nbsp;({{selectedBookReturn.title}}):</p>
+        <p style="margin-bottom:0px">ISBN:&nbsp;{{selectedBookReturn.isbn}}</p>
+        <p style="margin-bottom:0px">Returnee:&nbsp;{{selectedBookReturn.email}}</p>
+        <p style="margin-bottom:5px">Date:&nbsp;{{selectedBookReturn.date | date:'medium'}}</p>
+
+        <table style="width:100%">
+          <tr>
+            <td style="width:50%"><button type="button" class="btn btn-success" style="margin-right:5px;width:100%" (click)="grantRequestReturn(selectedBookReturn)">Accept Return</button></td>
+            <td style="width:50%"><button type="button" class="btn btn-danger" style="width:100%" (click)="denyRequestReturn(selectedBookReturn)">Deny Return</button></td>
+          </tr>
+        </table>
+      </div>
+  </td></tr>
+  </table>
+</div>
+
+<div style="text-align:center;margin:auto" [ngStyle]="{ 'width': (widthOfWindow > 800 ? '80%' : '90%') }">
+<table style="width:100%">
+  <tr>
+    <td style="text-align:left"><p (click)="allBooksClicked()" style="cursor:pointer">1. All Books</p></td>
+    <td *ngIf="displayAllBooks" style="float:right"><p (click)="allBooksClicked()" style="transform: rotate(90deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+    <td *ngIf="!displayAllBooks" style="float:right"><p (click)="allBooksClicked()" style="transform: rotate(270deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+  </tr>
+</table>
+</div>
+
+<div style="width:90%;text-align:center;margin:auto" *ngIf="widthOfWindow < 801">
+  <table style="width:100%;margin-bottom:20px" *ngIf="displayAllBooks">
+    <tr>
+      <th style="text-align:left">No.</th>
+      <th style="text-align:left">Title</th>
+      <th style="text-align:left">Author</th>
+      <th style="text-align:left"></th>
+    </tr>
+    <tr *ngFor="let book of allBooks; let i = index">
+      <td>{{i + 1}}.</td>
+      <td style="text-align:left">{{book.title}}</td>
+      <td style="text-align:left">{{book.author}}</td>
+      <td style="float:right" (click)="change(book)"><i class="far fa-edit" style="font-size:25px"></i></td>
+    </tr>
+    <tr *ngIf="displayExtra" id="bookDetails"><td colspan="4">
+      <div style="border:1px solid black;text-align:left;padding:5px;border-radius:5px">
+        <p><b>Selected Book</b>&nbsp;({{selectedBookTitle}}):</p>
+        <p style="margin-bottom:5px">ISBN:&nbsp;{{selectedBookISBN}}</p>
+        <p style="margin-bottom:5px">Year:&nbsp;{{selectedBookYear}}</p>
+        
+        <button type="button" class="btn btn-secondary" style="width:100%;margin-bottom:5px" (click)="amendBookDetails(selectedBookISBN)">Amend Details</button>
+        <button type="button" class="btn btn-danger" style="width:100%" (click)="deleteBook(template, selectedBookISBN)">Delete</button>
+      </div>
+  </td></tr>
+  </table>
+</div>
+
+<div style="width:80%;text-align:center;margin:auto" *ngIf="widthOfWindow > 800">
+<table style="width:100%;margin-bottom:20px" *ngIf="displayAllBooks">
+  <tr>
+    <th>No.</th>
+    <th>Image</th>
+    <th style="text-align:left">Title</th>
+    <th style="text-align:left">Author</th>
+    <th style="text-align:left">ISBN</th>
+    <th>Book Options</th>
+  </tr>
+  <tr *ngFor="let book of allBooks; let i = index">
+    <td>{{i + 1}}.</td>
+    <td>Image</td>
+    <td style="text-align:left">{{book.title}}</td>
+    <td style="text-align:left">{{book.author}}</td>
+    <td style="text-align:left">{{book.isbn}}</td>
+    <td>
+      <button type="button" class="btn btn-secondary" style="margin-right:5px" (click)="amendBookDetails(book.isbn)">Amend Details</button>
+      <button type="button" class="btn btn-danger" (click)="deleteBook(template, book.isbn)">Delete</button>
+    </td>
+  </tr>
+</table>
+</div>
+
+<div style="text-align:center;margin:auto" [ngStyle]="{ 'width': (widthOfWindow > 800 ? '80%' : '90%') }">
+  <table style="width:100%">
+    <tr>
+      <td style="text-align:left"><p (click)="addBookClicked()" style="cursor:pointer">2. Add a Book</p></td>
+      <td *ngIf="displayAddBook" style="float:right"><p (click)="addBookClicked()" style="transform: rotate(90deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+      <td *ngIf="!displayAddBook" style="float:right"><p (click)="addBookClicked()" style="transform: rotate(270deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+    </tr>
+  </table>
+</div>
+
+<div style="text-align:center;margin:auto" [ngStyle]="{ 'width': (widthOfWindow > 800 ? '80%' : '100%') }">
+<div *ngIf="displayAddBook">
+<form style="display:inline-block" [ngStyle]="{ 'width': (widthOfWindow > 700 ? '40%' : '80%') }" (submit)="onSubmit()">
+
+  <div class="form-group" style="text-align:left">
+    <label for="new-book-title">Title</label>
+    <input type="text" class="form-control" id="new-book-title" name="new-book-title" placeholder="Title" ngClass="{{titleClass}}" [(ngModel)]="newBookObject.title" (ngModelChange)="titleChange()">
+  </div>
+  <div class="form-group" style="text-align:left">
+    <label for="new-book-author">Author</label>
+    <input type="text" class="form-control" id="new-book-author" name="new-book-author" placeholder="Author" ngClass="{{authorClass}}" [(ngModel)]="newBookObject.author" (ngModelChange)="authorChange()">
+  </div>
+  <div class="form-group" style="text-align:left">
+    <label for="new-book-isbn">ISBN</label>
+    <input type="text" class="form-control" id="new-book-isbn" name="new-book-isbn" placeholder="ISBN" ngClass="{{isbnClass}}" [(ngModel)]="newBookObject.isbn" (ngModelChange)="isbnChange()">
+  </div>
+  <div class="form-group" style="text-align:left">
+    <label for="new-book-year">Publication Year</label>
+    <input type="text" class="form-control" id="new-book-year" name="new-book-year" placeholder="Publication Year" ngClass="{{yearClass}}" [(ngModel)]="newBookObject.year" (ngModelChange)="yearChange()">
+  </div>
+  <div class="form-group" style="text-align:left">
+    <label for="new-book-image">Image URL</label>
+    <input type="text" class="form-control" id="new-book-image" name="new-book-image" placeholder="Image" ngClass="{{imageClass}}" [(ngModel)]="newBookObject.image" (ngModelChange)="imageChange()">
+  </div>
+  <label for="new-book-status" style="float:left">Book Status</label>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="new-book-status" style="font-weight:normal">Book Availability</label>
+    </div>
+    <select class="custom-select" id="new-book-status" name="new-book-status" ngClass="{{statusClass}}" [(ngModel)]="bookAvailable" (ngModelChange)="statusChange()">
+      <option value="available">Available</option>
+      <option value="not-available">Not Available</option>
+    </select>
+  </div>
+
+  <div class="form-group" style="text-align:left">
+    <input type="submit" class="form-control" id="formGroupExampleInput2" value="Create Book">
+  </div>
+</form>
+</div>
+</div>
+
+<div style="text-align:center;margin:auto" [ngStyle]="{ 'width': (widthOfWindow > 800 ? '80%' : '90%') }">
+  <table style="width:100%">
+    <tr>
+      <td style="text-align:left"><p (click)="searchBookClicked()" style="cursor:pointer">3. Filter Books</p></td>
+      <td *ngIf="displaySearchBook" style="float:right"><p (click)="searchBookClicked()" style="transform: rotate(90deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+      <td *ngIf="!displaySearchBook" style="float:right"><p (click)="searchBookClicked()" style="transform: rotate(270deg);font-size:1.5rem;cursor:pointer">➤</p></td>
+    </tr>
+  </table>
+
+  <div *ngIf="displaySearchBook">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="new-book-status" style="font-weight:normal">Book Search...</label>
+      </div>
+      <select class="custom-select" id="new-book-status" name="new-book-status" (change)="statusChangeSearch()" [(ngModel)]="searchTerm">
+        <option value="available">Available</option>
+        <option value="not-available">Not Available</option>
+        <option value="on-loan">On Loan</option>
+      </select>
+    </div>
+
+    <!-- -->
+    <table style="width:100%;margin-bottom:20px" *ngIf="widthOfWindow > 800">
+      <tr>
+        <th>No.</th>
+        <th>Image</th>
+        <th style="text-align:left">Title</th>
+        <th style="text-align:left">Author</th>
+        <th style="text-align:left">ISBN</th>
+        <th>Book Options</th>
+      </tr>
+      <tr *ngFor="let book of searchResults; let i = index">
+        <td>{{i + 1}}.</td>
+        <td>Image</td>
+        <td style="text-align:left">{{book.title}}</td>
+        <td style="text-align:left">{{book.author}}</td>
+        <td style="text-align:left">{{book.isbn}}</td>
+        <td>
+          <button type="button" class="btn btn-secondary" style="margin-right:5px" (click)="amendBookDetails(book.isbn)">Amend Details</button>
+        </td>
+      </tr>
+    </table>
+
+    <table style="width:100%;margin-bottom:20px" *ngIf="widthOfWindow < 801">
+      <tr>
+        <th style="text-align:left">No.</th>
+        <th style="text-align:left">Title</th>
+        <th style="text-align:left">Author</th>
+        <th style="text-align:left"></th>
+      </tr>
+      <tr *ngFor="let book of searchResults; let i = index">
+        <td style="text-align:left">{{i + 1}}.</td>
+        <td style="text-align:left">{{book.title}}</td>
+        <td style="text-align:left">{{book.author}}</td>
+        <td style="float:right" (click)="change2(book)"><i class="far fa-edit" style="font-size:25px"></i></td>
+      </tr>
+      <tr *ngIf="displayExtra2" id="bookDetails2"><td colspan="4">
+        <div style="border:1px solid black;text-align:left;padding:5px;border-radius:5px">
+          <p><b>Selected Book</b>&nbsp;({{selectedBookTitle2}}):</p>
+          <p style="margin-bottom:5px">ISBN:&nbsp;{{selectedBookISBN2}}</p>
+          <p style="margin-bottom:5px">Year:&nbsp;{{selectedBookYear2}}</p>
+          
+          <button type="button" class="btn btn-secondary" style="width:100%" (click)="amendBookDetails(selectedBookISBN2)">Amend Details</button>
+        </div></td>
+      </tr>
+    </table>
+
+    <p *ngIf="searchResults == null || searchResults == undefined || searchResults.length == 0">No matches found.</p>
+    <!-- -->
+  </div>
+</div>
+<br>&nbsp;
+</div>

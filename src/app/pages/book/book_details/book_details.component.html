@@ -1,0 +1,65 @@
+<div style="text-align:center">
+<h1>Book Details</h1>
+</div>
+
+<div class="row" *ngIf="isLoggedIn()">
+  <div class="col-lg-4 col-md-4 col-sm-4" style="text-align:center">
+    <p style="text-decoration: underline;">Picture:</p>
+    <img src={{bookObj.image}} style="width:45%">
+  </div>
+  <div class="col-lg-4 col-md-4 col-sm-4" style="text-align:center">
+    <p style="text-decoration: underline;">Details:</p>
+    <div style="text-align:left;padding-left:30%;padding-right:30%">
+      <p>Title:&nbsp;</p><p style="font-weight:bold">{{bookObj.title}}</p>
+      <p>Author:&nbsp;</p><p style="font-weight:bold">{{bookObj.author}}</p>
+      <p>ISBN:&nbsp;</p><p style="font-weight:bold">{{bookObj.isbn}}</p>
+      <p>Publication Year:&nbsp;</p><p style="font-weight:bold">{{bookObj.year}}</p>
+      <p>Availability:&nbsp;</p>
+      <p style="font-weight:bold" *ngIf="bookObj.status == 'not-available' || bookObj.status == 'on-loan'">Not Available</p>
+      <p style="font-weight:bold" *ngIf="bookObj.status == 'available'">Available</p>
+    </div>
+  </div>
+  <div class="col-lg-4 col-md-4 col-sm-4" style="text-align:center">
+    <p style="text-decoration: underline;">Options:</p>
+    <div style="text-align:left;padding-left:30%;padding-right:30%">
+      <p>Book Rental:</p>
+      <button *ngIf="!requestSubmitted && !onLoan" style="width:131px" type="button" class="btn btn-secondary" (click)="submitRequest(bookObj.isbn, bookObj.title)" [disabled]="bookObj.status == 'not-available' || bookObj.status == 'on-loan'">Request Rental</button>
+      <button *ngIf="requestSubmitted && !onLoan" style="width:131px" type="button" class="btn btn-danger" (click)="cancelRequest(bookObj.isbn)">Cancel Rental</button>
+      <button *ngIf="!requestReturnSubmitted && onLoan" style="width:131px" type="button" class="btn btn-success" (click)="submitReturn(bookObj.isbn,bookObj.title)">Submit Return</button>
+      <button *ngIf="requestReturnSubmitted && onLoan" style="width:131px" type="button" class="btn btn-danger" (click)="cancelReturn(bookObj.isbn)">Cancel Return</button>
+      <br>&nbsp;
+      <p>Book Review:</p>
+      <span style="font-size:30px;cursor:pointer;" [ngStyle]="{ 'color': (colouringStar1 ? '#e8e410' : 'black') }" (click)="starClickedHTML(1)">☆</span>&nbsp;
+      <span style="font-size:30px;cursor:pointer;" [ngStyle]="{ 'color': (colouringStar2 ? '#e8e410' : 'black') }" (click)="starClickedHTML(2)">☆</span>&nbsp;
+      <span style="font-size:30px;cursor:pointer;" [ngStyle]="{ 'color': (colouringStar3 ? '#e8e410' : 'black') }" (click)="starClickedHTML(3)">☆</span>&nbsp;
+      <span style="font-size:30px;cursor:pointer;" [ngStyle]="{ 'color': (colouringStar4 ? '#e8e410' : 'black') }" (click)="starClickedHTML(4)">☆</span>&nbsp;
+      <span style="font-size:30px;cursor:pointer;" [ngStyle]="{ 'color': (colouringStar5 ? '#e8e410' : 'black') }" (click)="starClickedHTML(5)">☆</span>
+      <br>&nbsp;
+      <p>Last Reviewed:</p>
+      <p *ngIf="currentReviewDate != null" style="font-style:italic">{{currentReviewDate | date:'fullDate'}} at {{currentReviewDate | date:'mediumTime'}}</p>
+      <p *ngIf="currentReviewDate == null" style="font-style:italic">Not Reviewed</p>
+    </div>
+  </div>
+</div>
+
+<div class="row" *ngIf="!isLoggedIn()">
+  <div class="col-lg-6 col-md-6 col-sm-6" style="text-align:center">
+    <p style="text-decoration: underline;">Picture:</p>
+    <img src={{bookObj.image}} style="width:45%">
+  </div>
+  <div class="col-lg-6 col-md-6 col-sm-6" style="text-align:center">
+    <p style="text-decoration: underline;">Details:</p>
+    <div style="text-align:left;padding-left:30%;padding-right:30%">
+      <p>Title:&nbsp;</p><p style="font-weight:bold">{{bookObj.title}}</p>
+      <p>Author:&nbsp;</p><p style="font-weight:bold">{{bookObj.author}}</p>
+      <p>ISBN:&nbsp;</p><p style="font-weight:bold">{{bookObj.isbn}}</p>
+      <p>Publication Year:&nbsp;</p><p style="font-weight:bold">{{bookObj.year}}</p>
+      <p>Availability:&nbsp;</p>
+      <p style="font-weight:bold" *ngIf="bookObj.status == 'not-available' || bookObj.status == 'on-loan'">Not Available</p>
+      <p style="font-weight:bold" *ngIf="bookObj.status == 'available'">Available</p>
+    </div>
+  </div>
+</div>
+
+<br>
+<br>
